@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Model' => 'App\Policies\ModelPolicy', //tambahan
     ];
 
     /**
@@ -23,8 +23,20 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-
+        $this->registerPolicies(); //kebawah tambahan
+        //JSON_DECODE, karena tipe datadidb bertie JSON string ARRAY ,UNTUK MENGUBAH Menjadi php array
+        Gate::define('manage-user',function($user){
+          return count(array_intersect(["ADMIN"],json_decode($user->roles)));
+        });
+        Gate::define('manage-category',function($user){
+          return count(array_intersect(["STAFF","ADMIN"],json_decode($user->roles)));
+        });
+        Gate::define('manage-book',function($user){
+          return count(array_intersect(["STAFF","ADMIN"],json_decode($user->roles)));
+        });
+        Gate::define('manage-order',function($user){
+          return count(array_intersect(["STAFF","ADMIN"],json_decode($user->roles)));
+        });
         //
     }
 }

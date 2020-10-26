@@ -3,11 +3,45 @@
 @section('content')
 
 <div class="row">
+<div class="col-md-6">
+  <div class="col-md-6">
+    <ul class="nav nav-pills card-header-pills">
+      <li class="nav-item">
+        <a class="{{Request::get('status') == NULL && Request::path() == 'book' ? 'active' : ''}} nav-link"
+        href="{{route('book.index')}}">All</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{Request::get('status') == 'publish' ? 'active' : '' }}
+        " href="{{route('book.index',['status'=>'publish'])}}">publis</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{Request::get('status') == 'draft' ? 'active' : '' }}"
+        href="{{route('book.index',['status'=>'draft'])}}">draft</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
   <div class="col-md-12 text-right">
     <a href="{{route('book.create')}}"class="btn btn-primary">Create book</a>
   </div>
   <br><br>
+
   <div class="col-md-12">
+    <div class="col-md-6">
+      <form action="{{route('book.index')}}">
+        <div class="input-group">
+          <input type="text"
+                 placeholder="input title"
+                 class="form-control"
+                 name="keyword" value="{{Request::get('keyword')}}">
+          <div class="input-group-append">
+            <input type="submit" class="btn btn-primary" value="filter">
+          </div>
+        </div>
+      </form>
+    </div>
+    <br><br>
     <table class="table table-bordered table-stripped">
       <thead>
         <tr>
@@ -58,25 +92,49 @@
              @endif
           </td>
           <td>
-
+            <ul class="pl-3">
+              @foreach($mek->category as $kat)
+              <li>
+                {{$kat->name}}
+              </li>
+              @endforeach
+            </ul>
           </td>
           <td>{{$mek->stock}}</td>
           <td>{{$mek->price}}</td>
           <td>
-            Actions
+              <a href="{{route('book.edit',['id'=>$mek->id])}}"class="btn btn-info text-white btn-sm">Edit</a>
+              <form
+               onsubmit="return confirm('Delete this book permanently?')"
+               class="d-inline"
+               action="{{route('book.destroy',['id'=>$mek->id])}}"
+               method="POST"
+               >
+               @csrf
+               <input
+                 type="hidden"
+                 value="DELETE"
+                 name="_method">
+               <input
+                 type="submit"
+                 class="btn btn-danger btn-sm"
+                 value="Trash">
+              </form>
           </td>
         </tr>
         @endforeach
       </tbody>
-      <tfoot>
+      <!-- <tfoot>
         <tr>
           <td>
 
           </td>
         </tr>
-      </tfoot>
+      </tfoot> -->
     </table>
+      {{$pek->links() }}
   </div>
-
 </div>
+
+
 @endsection

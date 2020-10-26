@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class ControllerCategory extends Controller
 {
     /**
@@ -11,9 +11,19 @@ class ControllerCategory extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+     public function __construct()
+    {
+      $this->middleware(function($request,$next){
+        if (Gate::allows('manage-category')) return $next($request);
+        abort(403,'Anda tidak memiliki hak akses');
+      });
+    }
+
     public function index(Request $request)
     {
         //
+
+
         $cat = \App\Category::paginate(5);
         $filter = $request->get('name');
         if ($filter) {
@@ -21,6 +31,8 @@ class ControllerCategory extends Controller
         }
         return view('category.index',['moh'=>$cat]);
     }
+
+
 
     public function cari(Request $req){
       $category = \App\Category::paginate(5);
@@ -31,7 +43,7 @@ class ControllerCategory extends Controller
       return view('category.trash',['category'=>$category]);
     }
 
-    public function searchAjax(Request $req){
+    public function searchAjax(Request $req){ //fungsi untuk search category pada creat and edit book
       $keyword = $req->get('q');
       $category = \App\Category::where("name","LIKE","%$keyword%")->get();
       return $category;
@@ -57,6 +69,13 @@ class ControllerCategory extends Controller
     public function store(Request $request)
     {
         //
+          $this->middleware('auth');
+        \Validator::make($request->all(),[
+          // "created_by"=>"required",
+          "name"=>"required|min:3|max:30",
+          "image"=>"required"
+        ])->validate();
+
       $nam = $request->get('name');
       $createCategory = new \App\Category;
       $createCategory->name = $nam;
@@ -67,7 +86,13 @@ class ControllerCategory extends Controller
         $imgPat = $file->store('images','public',$nama_file);
         $createCategory->image =$imgPat;
       }
-     $createCategory->created_by = \Auth::user()->id;
+      if (Auth::check()) {
+         //ini yang harus login dlu
+            $createCategory->created_by =  \Auth::user()->id;
+      }
+       else {
+            $createCategory->created_by=0;
+      }
      $createCategory->slug = \Str::slug($nam, '-');
      $createCategory->save();
      return redirect()->route('category.create')->with('status','Category Sukses dItambahkan');
@@ -109,9 +134,15 @@ class ControllerCategory extends Controller
     public function update(Request $request, $id)
     {
         //
+        $kat = \App\Category::findOrFail($id);
+        \Validator::make($request->all(),[
+          "name"=>"required|min:3|max:30",
+          // "image"=>"required",
+          // "slug"=>"required",
+          // Rule::unique("category")->ignore($kat->slug,"slug")
+        ])->validate();
         $nam = $request->get('name');
         $slug = $request->get('slug');
-        $kat = \App\Category::find($id);
         $kat->name = $nam;
         $kat->slug = $slug;
         if ($request->file('image')) {
@@ -126,7 +157,6 @@ class ControllerCategory extends Controller
         $kat->slug = \Str::slug($nam);
         $kat->save();
         return redirect()->route('category.edit', ['id' => $id])->with('status','Sukses edit');
-        //return redirect()->route('category.edit',['id'=>$id]->with('status','Sukses edit');
 
     }
 
@@ -139,12 +169,22 @@ class ControllerCategory extends Controller
     public function destroy($id)
     {
         //
+    //    $kat = \App\Category::find($id);
         $kat = \App\Category::findOrFail($id);
+        // if (Auth::check()) {
+        //   // code...
+        //   $kat->deleted_by =  \Auth::user()->id;
+        // }else {
+        //   return('maaf brow login dlu');
+        // }
+
         $kat->delete();
         return redirect()->route('category.index')->with('status', 'Category successfully moved to trash');
     }
 
     public function trash(Request $req){
+      // $category = \App\Category::paginate(5);
+
       $category =  \App\Category::onlyTrashed()->paginate(5);
 
       // $category = \App\Category::paginate(5);

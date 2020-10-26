@@ -1,16 +1,72 @@
 @extends("layouts.global")
 @section("title") Users list @endsection
+<?php
+/**
+ *
+ */
+class Orang
+{
+  public $name="BOKER";
+  public $age;
+  public $city;
+  function __construct()
+  {
+    // code...
+  }
+  public function name($arg){
+    $this->name = $arg;
+  }
+  public function age($arg){
+    $this->age = $arg;
+  }
+  public function city($ag){
+    $this->city= $ag;
+  }
+  public function getnya(){
+    return $this->name;
+  }
+}
+$myObj = new Orang();
+// $myObj->name = "John";
+$cetak = $myObj->getnya();
+
+$myJSON = json_encode($myObj->name);
+// echo $myJSON;
+ ?>
 @section("content")
+<div class="" style="margin-top:-55px;margin-left:-20px;">
+  <div class="col-md-12 text-right">
+    <a
+      href="{{route('users.create')}}"class="btn btn-primary">Create user</a>
+  </div>
+</div>
+
  <br>
- <div class="">
+ <div class="" style="margin-left:-75px;margin-bottom:20px;">
    <div class="">
      <form class="{{route('users.index')}}">
-       <input class="form-control form-control-lg" name="keyword" value="{{Request::get('keyword')}}" type="text" placeholder="email">
-       <div class="col-md-6">
-        
+       <input class="form-control" style="width:250px;" name="keyword" value="{{Request::get('keyword')}}" type="text" placeholder="email">
+       <div class="">
+         <input
+         {{Request::get('status')=='ACTIVE' ? 'checked' : ''}}
+          type="radio"
+          name="status"
+          id="active"
+          value="ACTIVE"
+          class="form-control">
+          <label for="active">Active</label>
+          <input
+          {{Request::get('status')=='INactive' ? 'checked' : ''}}
+           type="radio"
+           name="status"
+           id="inactive"
+           value="INACTIVE"
+           class="form-control">
+           <label for="inactive">INACTIVE</label>
        </div>
          <div class="input-groub-append">
            <input
+           style="margin-top:10px;"
            type="submit"
            class="btn btn-primary"
            value="filter">
@@ -18,21 +74,15 @@
      </form>
    </div>
  </div>
-<div class="row">
-  <div class="col-md-12 text-right">
-    <a href="{{route('users.create')}}"class="btn btn-primary">Create user</a>
-  </div>
-</div>
+
 <br>
+@if(session('status'))
+<div class="alert alert-success">
+{{session('status')}}
+</div>
+@endif
 <table class="table table-bordered">
-
  <thead>
-    @if(session('status'))
-    <div class="alert alert-success">
-    {{session('status')}}
-    </div>
-    @endif
-
  <tr>
  <th><b>Name</b></th>
  <th><b>Username</b></th>
@@ -72,8 +122,9 @@
  </td>
  <td>
    <a class="btn btn-info text-white btn-sm" href="{{route('users.edit',['id'=>$user->id])}}">Edit</a>
+   {{-- routenya dibaca /user/{id}/edit ,id diperoleh dari ['id'..] --}}
    <form
-     onsubmit="return confirm('Delete this user permanently?')"
+     onsubmit="return confirm('Yakin hapus permanent ?')"
      class="d-inline"
      action="{{route('users.destroy', ['id' => $user->id ])}}"
      method="post">

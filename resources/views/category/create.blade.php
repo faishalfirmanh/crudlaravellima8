@@ -16,15 +16,26 @@
       @csrf
       <label for="">Nama Kategory</label> <br>
       <input
+          type="hidden"
+          value=0
+          name="created_by">
+      <input
         type="text"
-        class="form-control"
+        value="{{old('name')}}"
+        class="form-control {{$errors->first('name') ? "is-invalid" :""}}"
         name="name"/>
+        <div class="invalid-feedback">
+          {{$errors->first('name')}}
+        </div>
       <br>
       <label for="">upload foto</label> <br>
       <input
         type="file"
-        class="form-control"
+        class="form-control {{$errors->first('image') ? "is-invalid" :""}}"
         name="image"/>
+        <div class="invalid-feedback">
+          {{$errors->first('image')}}
+        </div>
       <br>
       <input
        type="submit"

@@ -25,20 +25,16 @@
       <a href="{{route('category.create')}}"class="btn btn-primary">Create category</a>
     </div>
   </div>
-  <div class="col-md-6">
-    <ul class="nav nav-pills card-header-pills">
-      <!-- <li class="nav-item">
-        <a class="nav-link active" href="{{route('category.index')}}">Publisehd</a>
-      </li> -->
-      <li class="nav-item">
-        <a class="nav-link active" href="{{route('category.trash')}}">
-          Trash
-        </a>
-      </li>
-    </ul>
+  <div class="col-md-12" style="margin-bottom: 25px;">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active" href="{{route('category.trash')}}">
+            Trash
+          </a>
+        </li>
+      </ul>
   </div>
-<!-- </div>
-<div class="row"> -->
+
   <div class="col-md-12">
     @if(session('status'))
      <div class="row">
@@ -108,8 +104,10 @@
           </td>
         </tr>
         @endforeach
+
       </tbody>
     </table>
   </div>
 </div>
+  {{$moh->links() }}
 @endsection

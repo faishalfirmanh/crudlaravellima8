@@ -1,36 +1,8 @@
 @extends('layouts.global')
-@section('footer-scripts')
-<link type="text/css" href="{{ asset('select2.min.css') }}" rel="stylesheet" />
-<script src="{{asset('select2.min.js')}}"></script>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-
-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-
-rc.0/js/select2.min.js"></script>
-
-@endsection
-<script>
-$('.category').select2({
-  ajax:{
-    url:'http://127.0.0.1:8000/ajax/category/search',
-    dataType:'json',
-    processResults:function(data){
-      return{
-        result:data.map(function(item){
-          return{
-            id:item.id,
-            text:item.name
-          }
-        })
-      }
-    }
-  }
-});
-</script>
 @section('title')
 Create Book
 @endsection
-
 @section('content')
 <!-- <div class="row">
       @if(session('status'))
@@ -85,7 +57,7 @@ Create Book
   </div>
 </div> -->
 
-<div class="row">
+
  <div class="col-md-8">
    @if(session('status'))
       <div class="alert alert-success">
@@ -111,10 +83,9 @@ Create Book
        <br>
        <label for="category">Categories</label><br>
       <select
-        name="category[]"
+        name="category[]" {{-- tidak pake[] tidak apa2, pake array karena mengizinkan boleh lebih dari satu kategori --}}
         multiple
         id="category"
-
         class="form-control">
       </select>
       <br><br/>
@@ -144,5 +115,26 @@ Create Book
        value="DRAFT">Save as draft</button>
        </form>
        </div>
-       </div>
+
+@endsection
+@section('footer-scripts') {{-- untuk include file jquerynya --}}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+  $('#category').select2({
+    ajax:{
+      url:'http://127.0.0.1:8000/ajax/category/search',
+      processResults:function(data){
+        return{
+          results:data.map(function(item){
+            return{
+              id:item.id,
+              text:item.name   //item.nama kolom dari tamble category
+            }
+          })
+        }
+      }
+    }
+  });
+</script>
 @endsection
