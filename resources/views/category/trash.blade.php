@@ -86,6 +86,7 @@
           </tr>
         </tfoot>
       </table>
+      {{$category->links()}}
     </div>
   </div>
 </div>

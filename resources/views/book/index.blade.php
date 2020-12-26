@@ -21,6 +21,10 @@
     </ul>
   </div>
 </div>
+<div class="col-md-8">
+    <a class="nav-link {{Request::get('status') == 'draft' ? 'active' : '' }}"
+    href="{{route('book.trash')}}">Trash</a>
+</div>
 
   <div class="col-md-12 text-right">
     <a href="{{route('book.create')}}"class="btn btn-primary">Create book</a>
@@ -118,7 +122,7 @@
                <input
                  type="submit"
                  class="btn btn-danger btn-sm"
-                 value="Trash">
+                 value="delete">
               </form>
           </td>
         </tr>

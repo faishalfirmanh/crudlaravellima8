@@ -24,7 +24,7 @@ class ControllerCategory extends Controller
         //
 
 
-        $cat = \App\Category::paginate(5);
+        $cat = \App\Category::paginate(10);
         $filter = $request->get('name');
         if ($filter) {
           $cat = \App\Category::where('name','LIKE',"%$filter%")->paginate(5);
@@ -185,7 +185,7 @@ class ControllerCategory extends Controller
     public function trash(Request $req){
       // $category = \App\Category::paginate(5);
 
-      $category =  \App\Category::onlyTrashed()->paginate(5);
+      $category =  \App\Category::onlyTrashed()->paginate(10);
 
       // $category = \App\Category::paginate(5);
       // $filter = $req->get('name');
@@ -216,7 +216,7 @@ class ControllerCategory extends Controller
         with('status','tidak dapat hapus permanent category');
       }else {
         $kat->forceDelete();
-        return redirect()->route('category.index')
+        return redirect()->route('category.trash')
         ->with('status','Kategory TELAH dihapus permanent');
       }
 

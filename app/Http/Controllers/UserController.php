@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         //
         $status = $req->get('status');
-        $user = \App\User::paginate(5);
+        $user = \App\User::paginate(10);
         $filter = $req->get('keyword');
         if ($filter) {
           if ($status) {

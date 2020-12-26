@@ -33,6 +33,7 @@ ini edit
       <label for="">Kategori Slug</label><br>
       <input
         type="text"
+        disabled
         class="form-control {{$errors->first('slug') ? "is-invalid":""}}"
         name="slug"
         value="{{old('slug') ? old('slug') : $cat->slug}}">

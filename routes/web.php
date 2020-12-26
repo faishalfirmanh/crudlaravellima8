@@ -31,11 +31,17 @@ Route::get('/cat','ControllerCategory@cari')->name('category.cari');
 Route::delete('/category/{id}/deletePermanent','ControllerCategory@deletePermanent')->name('category.deletePermanent');
 Route::get('/category/{id}/restore','ControllerCategory@restore')->name('category.restore');
 Route::get('/category/trash', 'ControllerCategory@trash')->name('category.trash');
+Route::get('/book/trash','BookController@trash')->name('book.trash');
+Route::get('/book/{id}/restore','BookController@restore')->name('book.restore');
+Route::delete('/book/{id}/deletePermanent','BookController@deletePermanent')->name('book.deletePermanent');
 
 Route::resource("category","ControllerCategory");
 Route::resource("book","BookController");
 Route::resource("order","OrderController");
 
+
+
+Route::get('/Cobak','HomeController@landOfDawn');
 
 Route::get("/karbon","ControllerCategory@karbon");
 

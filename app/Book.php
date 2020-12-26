@@ -10,7 +10,7 @@ class Book extends Model
 
       protected $table = 'book';
 
-    //use SoftDeletes;
+    use SoftDeletes;
     public function category(){
      return $this->belongsToMany('App\Category');
   }

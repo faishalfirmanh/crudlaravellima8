@@ -25,4 +25,12 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function MMK(){
+      echo "hallo memek <br>";
+    }
+    public function landOfDawn(){
+      $this->MMK();
+      return "Hallo ini land of dawn";
+    }
 }

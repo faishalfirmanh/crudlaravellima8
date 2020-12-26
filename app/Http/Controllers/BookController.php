@@ -161,9 +161,41 @@ class BookController extends Controller
         //
         $pic = \App\Book::where('id',$id)->first();
         $buku = \App\Book::findOrFail($id);
+      //  $buku =  \App\Book::onlyTrashed()->paginate(5);
         File::delete(public_path('storage.book'),$pic->cover);
         $buku->delete();
+
         return redirect()->route('book.index')->with('status','bpok berhasil dihapus');
+
+    }
+
+    public function trash(Request $req){
+      $buku = \App\Book::onlyTrashed()->paginate(5);
+      return view('book.trash',['bok'=>$buku]);
+    }
+    public function restore($id){
+      $bok = \App\Book::withTrashed()->findOrFail($id);
+      if ($bok->trashed()) {
+        $bok->restore();
+        return redirect()->route('book.trash')->with('status', 'Book successfully restored');
+      }else {
+        return redirect()->route('book.trash')->with('status', 'Book Tidak disamph');
+      }
+    }
+    public function deletePermanent($id){
+
+      // $katdua = \App\Category::findOrFail($id);
+      // $katdua->delete();
+      // return redirect()->route('category.index')->with('status','Kategory TELAH dihapus permanent');
+      $bok = \App\Book::withTrashed()->findOrFail($id);
+      if (!$bok->trashed()) {
+        return redirect()->route('book.index')->
+        with('status','tidak dapat hapus permanent buku');
+      }else {
+        $bok->forceDelete();
+        return redirect()->route('book.trash')
+        ->with('status','buku TELAH dihapus permanent');
+      }
 
     }
 }
